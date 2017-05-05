@@ -1,7 +1,7 @@
 {
-  "name": "training-starter",
+  "name": "js-utilities",
   "version": "0.0.1",
-  "description": "starter repo to base all hearst training from",
+  "description": "Covers js utility methods and functions",
   "main": "index.js",
   "author": "scott moss <scott@angularclass.com>",
   "license": "MIT",
