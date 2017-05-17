@@ -22,3 +22,12 @@ export const reduce = (array, cb, accumulator) => {
   }
   return accumulator
 }
+
+export const filter = (array, cb) => {
+  return reduce(array, (results, item, i) => {
+    if (cb(item, i, array)) {
+      results.push(item)
+    }
+    return results
+  }, [])
+}
