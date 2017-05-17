@@ -8,24 +8,21 @@ const methods = [
   'reduce',
   'forEach',
   'map',
-  'find',
-  'findIndex',
   'filter',
-  'every'
+  'every',
+  'unique',
+  'some'
 ]
 
 global.expect = chai.expect
 global.sinon = require('sinon')
+
 global.CheatFreeArray = class extends Array {
   constructor(...args) {
     super(...args)
+    methods.forEach(method => {
+      this[method] = function() {throw new Error('No Cheating! Cannot use the native method')}
+    })
   }
-  reduce(){throw new Error('No Cheating!')}
-  forEach(){throw new Error('No Cheating!')}
-  map(){throw new Error('No Cheating!')}
-  find(){throw new Error('No Cheating!')}
-  findIndex(){throw new Error('No Cheating!')}
-  filter(){throw new Error('No Cheating!')}
-  every(){throw new Error('No Cheating!')}
 } 
 

@@ -31,3 +31,20 @@ export const filter = (array, cb) => {
     return results
   }, [])
 }
+
+export const every = (array, cb) => {
+  if (!array.length) {
+    return true
+  }
+
+  let result = false
+  for (let i = 0; i < array.length; i++) {
+    result = Boolean(cb(array[i], i, array))
+    if (!result) {
+      return result
+    }
+  }
+  return result
+}
+
+

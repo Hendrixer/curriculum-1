@@ -1,4 +1,4 @@
-import {each, map, reduce, filter} from './utilities'
+import {each, map, reduce, filter, every} from './utilities'
 import {expect} from 'chai'
 const user = require('../training.json')
 
@@ -182,7 +182,7 @@ describe('Utilities', () => {
     })
   })
 
-  describe.only('filter', () => {
+  describe('filter', () => {
     it('should be a function', () => {
       expect(filter).to.be.a('function')
     })
@@ -254,6 +254,90 @@ describe('Utilities', () => {
 
       const results = filter(items, Boolean)
       expect(results).to.not.equal(items)
+    })
+  })
+
+  describe.only('every', () => {
+    it('should be a function', () => {
+      expect(every).to.be.a('function')
+    })
+
+    it('should take a callback', () => {
+      try {
+        every(new CheatFreeArray(1), 'thisIsNotAFunction')
+      } catch(e) {
+        expect(e.message).to.match(/is not a function/)
+      }
+    })
+
+    it('should not mutate the array', () => {
+      const items = new CheatFreeArray(1,2,3)
+      every(items, Boolean)
+
+      expect(items).to.have.length(3)
+      expect(items[0]).to.equal(1)
+      expect(items[1]).to.equal(2)
+      expect(items[2]).to.equal(3)
+    })
+
+
+    it('should call the callback with the correct args', () => {
+      const items = new CheatFreeArray(1,2,3)
+      const cbSpy = sinon.spy(Boolean)
+      every(items, cbSpy)
+
+      const call1 = cbSpy.getCall(0)
+      const call2 = cbSpy.getCall(1)
+      const call3 = cbSpy.getCall(2)
+
+      expect([call1.args[0], call1.args[1], call1.args[2]])
+        .to.eql([1, 0, items])
+
+      expect([call2.args[0], call2.args[1], call2.args[2]])
+        .to.eql([2, 1, items])
+
+      expect([call3.args[0], call3.args[1], call3.args[2]])
+        .to.eql([3, 2, items])
+
+    })
+    
+    it('should return a new array', () => {
+      const items = new CheatFreeArray(1,2,3)
+
+      const results = every(items, Boolean)
+      expect(results).to.not.equal(items)
+    })
+
+    it('should return true if array is empty', () => {
+      let cbSpy = sinon.spy()
+      const result = every(new CheatFreeArray(), cbSpy)
+
+      expect(result).to.be.true
+      sinon.assert.callCount(cbSpy, 0)
+    })
+
+    it('should stop iteration if an item fails', () => {
+      let items = new CheatFreeArray(1, 2, false, true)
+      let cbSpy = sinon.spy(Boolean)
+      let result = every(items, cbSpy)
+      sinon.assert.callCount(cbSpy, 3)
+      expect(result).to.be.false
+
+      cbSpy = sinon.spy(Boolean)
+      items = new CheatFreeArray(0,2,3)
+      result = every(items, cbSpy)
+      sinon.assert.callCount(cbSpy, 1)
+      expect(result).to.be.false
+
+      cbSpy = sinon.spy(Boolean)
+      items = new CheatFreeArray(1,2,3, false)
+      result = every(items, cbSpy)
+      sinon.assert.callCount(cbSpy, 4)
+      expect(result).to.be.false
+    })
+
+    it('should return a boolean', () => {
+      expect(every(new CheatFreeArray(1), Boolean)).to.be.a('boolean')
     })
   })
 })
