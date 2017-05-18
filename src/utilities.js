@@ -48,3 +48,14 @@ export const every = (array, cb) => {
 }
 
 
+export const flatten = (array, result = []) => {
+  return reduce(array, (mem, item) => {
+    if (Array.isArray(item)) {
+      return flatten(item, mem)
+    }
+    mem.push(item)
+    return mem
+  }, result)
+}
+
+

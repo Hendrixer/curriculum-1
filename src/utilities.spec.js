@@ -1,4 +1,11 @@
-import {each, map, reduce, filter, every} from './utilities'
+import {
+  each,
+  map,
+  reduce,
+  filter,
+  every,
+  flatten
+} from './utilities'
 import {expect} from 'chai'
 const user = require('../training.json')
 
@@ -257,7 +264,7 @@ describe('Utilities', () => {
     })
   })
 
-  describe.only('every', () => {
+  describe('every', () => {
     it('should be a function', () => {
       expect(every).to.be.a('function')
     })
@@ -338,6 +345,42 @@ describe('Utilities', () => {
 
     it('should return a boolean', () => {
       expect(every(new CheatFreeArray(1), Boolean)).to.be.a('boolean')
+    })
+  })
+
+  describe('flatten', () => {
+    it('should be a function', () => {
+      expect(flatten).to.be.a('function')
+    })
+
+    it('should always return a new array', () => {
+      let array = new CheatFreeArray()
+      let result = flatten(array)
+      expect(result).to.be.an('array')
+      expect(result).to.not.equal(array)
+
+      array = new CheatFreeArray(new CheatFreeArray(), new CheatFreeArray())
+      result = flatten(array)
+      expect(result).to.not.equal(array)
+    })
+
+    it('should keep the same order', () => {
+      let array = new CheatFreeArray(1, 2, new CheatFreeArray(3, 4), 5, new CheatFreeArray(6, 7))
+
+      let result = flatten(array)
+      expect(result).to.eql([1,2,3,4,5,6,7])
+    })
+
+    it('should handle arrays more than one level deep', () => {
+
+      let array = [1, [2, [3, [4, [5]]]]]
+
+      let result = flatten(array)
+      expect(result).to.eql([1,2,3,4,5])
+    })
+
+    it('should not be more than 15 lines of code', () => {
+      expect(flatten.toString().split('\n').length).to.be.lessThan(16)
     })
   })
 })
