@@ -11,23 +11,3 @@ export const map = (array, cb) => {
   }
   return results
 }
-
-export const reduce = (array, cb, accumulator) => {
-  accumulator = accumulator === undefined
-    ? array[0] 
-    : accumulator
-
-  for(let i = 0; i < array.length; i++){
-    accumulator = cb(accumulator, array[i], i)
-  }
-  return accumulator
-}
-
-export const filter = (array, cb) => {
-  return reduce(array, (results, item, i) => {
-    if (cb(item, i, array)) {
-      results.push(item)
-    }
-    return results
-  }, [])
-}
