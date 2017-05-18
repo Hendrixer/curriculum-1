@@ -6,5 +6,5 @@
 * Days: 1
 
 
-## Module-1
-In this module you will be building out the `each` and `map` methods. Get all the tests to pass!
+## Module-1-solution
+Here are the answers!
